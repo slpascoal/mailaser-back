@@ -122,4 +122,30 @@ class AuthService
             'status' => $status
         ];
     }
+
+    public function showUserService(mixed $user): array
+    {
+        try {
+            $user = $user->toArray();
+
+            $data = [
+                'name' => $user['name'],
+                'email' => $user['email']
+            ];
+
+            $status = 200;
+        } catch (\Exception $exception) {
+            $data = [
+                'message' => 'Erro ao buscar dados do usuário.',
+                'error' => $exception->getMessage()
+            ];
+
+            $status =  $exception->getCode();
+        }
+
+        return [
+            'data' => $data,
+            'status' => $status
+        ];
+    }
 }

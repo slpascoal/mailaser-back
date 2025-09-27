@@ -70,4 +70,16 @@ class AuthController extends Controller
             'data' => $deleteUserResponse['data'],
         ], $deleteUserResponse['status']);
     }
+
+    /**
+     * Retorna os dados do usuário autenticado.
+     */
+    public function showUser(Request $request): JsonResponse
+    {
+        $showUserData = $this->authService->showUserService($request->user());
+
+        return response()->json([
+            'data' => $showUserData['data'],
+        ], $showUserData['status']);
+    }
 }
