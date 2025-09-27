@@ -26,12 +26,11 @@ class AuthController extends Controller
     {
         $validatedData = $request->validated();
 
-        $token = $this->authService->registerService($validatedData);
+        $registerResponse = $this->authService->registerService($validatedData);
 
         return response()->json([
-            'message' => 'Usuário registrado com sucesso!',
-            'token' => $token,
-        ], 201);
+            'data' => $registerResponse['data'],
+        ], $registerResponse['status']);
     }
 
     /**
@@ -44,8 +43,7 @@ class AuthController extends Controller
         $loginResponse = $this->authService->loginService($credentials);
 
         return response()->json([
-            'message' => $loginResponse['message'],
-            'token' => $loginResponse['token']
+            'data' => $loginResponse['data'],
         ], $loginResponse['status']);
     }
 
@@ -54,9 +52,11 @@ class AuthController extends Controller
      */
     public function logout(Request $request): JsonResponse
     {
-        $request->user()->currentAccessToken()->delete();
+        $logoutResponse = $this->authService->logoutService($request->user());
 
-        return response()->json(['message' => 'Logout realizado com sucesso!']);
+        return response()->json([
+            'data' => $logoutResponse['data'],
+        ], $logoutResponse['status']);
     }
 
     /**
@@ -64,12 +64,10 @@ class AuthController extends Controller
      */
     public function destroy(Request $request): JsonResponse
     {
-        $user = $request->user();
+        $deleteUserResponse = $this->authService->deleteUserService($request->user());
 
-        $user->tokens()->delete();
-
-        $user->delete();
-
-        return response()->json(['message' => 'Sua conta foi deletada com sucesso.']);
+        return response()->json([
+            'data' => $deleteUserResponse['data'],
+        ], $deleteUserResponse['status']);
     }
 }
